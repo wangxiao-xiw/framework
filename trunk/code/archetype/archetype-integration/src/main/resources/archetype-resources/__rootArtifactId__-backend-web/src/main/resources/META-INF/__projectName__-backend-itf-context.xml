@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="${dubbo.application.consumer.name}"
+		owner="${dubbo.application.owner}" compiler="javassist" environment="develop" />
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"
+		port="${dubbo.registry.port}" />
+	<dubbo:monitor protocol="registry" address="${dubbo.monitor.address}"/>
+
+	<dubbo:reference id="itfAppservice"
+		interface="com.hn658.user.itf.ItfAppInfoService"
+		timeout="60000"/>
+	<dubbo:reference id="itfUserservice"
+		interface="com.hn658.user.itf.ItfUserService"
+		timeout="60000"/>
+
+</beans>

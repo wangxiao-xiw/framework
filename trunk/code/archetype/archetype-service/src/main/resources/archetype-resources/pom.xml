@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}-v${project.version}</name>
+
+
+	<properties>
+		<service.common>0.0.1-SNAPSHOT</service.common>
+		<service.api>0.0.1-SNAPSHOT</service.api>
+		<hessian.version>4.0.7</hessian.version>
+		<dubbo.jetty.version>6.1.26</dubbo.jetty.version>
+		<druid.version>1.0.6</druid.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- base -->
+			<dependency>
+				<groupId>com.658.base</groupId>
+				<artifactId>service-common</artifactId>
+				<version>${service.common}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.658.base</groupId>
+				<artifactId>service-api</artifactId>
+				<version>${service.api}</version>
+			</dependency>
+			<!-- hessian -->
+			<dependency>
+				<groupId>com.caucho</groupId>
+				<artifactId>hessian</artifactId>
+				<version>${hessian.version}</version>
+			</dependency>
+			<!-- jetty -->
+			<dependency>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty</artifactId>
+				<version>${dubbo.jetty.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

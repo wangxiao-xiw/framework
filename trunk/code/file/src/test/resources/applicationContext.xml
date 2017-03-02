@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<context:property-placeholder ignore-resource-not-found="true"
+			location="classpath*:/framework.properties" file-encoding="UTF-8" />
+
+	<context:component-scan base-package="com.baidu,com.hn658.framework" />
+
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<!-- 使用disconf必须添加以下配置 -->
+	<bean id="disconfMgrBean" class="com.baidu.disconf.client.DisconfMgrBean"
+		destroy-method="destroy">
+		<property name="scanPackage" value="com.hn658.framework" />
+	</bean>
+	<bean id="disconfMgrBean2" class="com.baidu.disconf.client.DisconfMgrBeanSecond"
+		init-method="init" destroy-method="destroy">
+	</bean>
+	
+	<bean id="disconfFrameworkConfig" class="com.hn658.framework.config.impl.DisconfFrameworkConfig"/>
+	
+	<bean id="fileFrameworkConfig" class="com.hn658.framework.config.impl.FileFrameworkConfig"/>
+	
+	<bean id="fileManagerUtil" class="com.hn658.framework.file.utils.impl.FileManagerUtilOSSImpl">
+		<property name="config" ref="disconfFrameworkConfig" />
+	</bean>
+</beans>

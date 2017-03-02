@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" 
+    >
+    
+    <!-- 配置Job执行上下文可以使用的服务对象 -->
+    <!-- <bean id="helloService" class="com.deppon.foss.taskservice.HelloService" /> -->
+    <!-- 配置quartz的scheduler实例 -->
+    <bean id="quartzSchedule" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!-- 使用SimpleConfigFactory的简单快速配置 -->
+        <property name="quartzProperties" ref="gridConfig" /> 
+    </bean>
+
+    <bean id="gridConfig" class="com.hn658.framework.scheduling.SimpleConfigFactory">
+        <!-- 当前节点的instanceId,为了调试时任务实例不会冲突请配置自己唯一id -->
+        <property name="instanceId" value="xubulong" />
+        <!-- 使用jndi数据源不要忘记前缀java:comp/env/ -->
+        <!--  <property name="jndiURL" value="java:comp/env/jdbc/fossds" /> -->
+        
+        <!-- 以下是配置JDBC方式的数据源 -->
+               
+        <property name="jdbcDriver" value="org.postgresql.Driver" />
+        <property name="jdbcURL" value="jdbc:postgresql://192.168.130.103:5432/framework?useUnicode=true&amp;characterEncoding=utf-8" />
+        <property name="jdbcUser" value="postgres" />
+        <property name="jdbcPassword" value="postgres" />
+        
+    </bean>
+
+    <!-- 配置定时任务执行的节点实例 -->
+    <bean id="gridNode1" class="com.hn658.framework.scheduling.JobGridNode">
+        <property name="scheduler" ref="quartzSchedule" />      
+    </bean>
+</beans>

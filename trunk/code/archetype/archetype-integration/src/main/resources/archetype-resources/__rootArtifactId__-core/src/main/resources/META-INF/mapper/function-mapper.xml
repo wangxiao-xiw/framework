@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hn658.${projectName}.common.entity.FunctionEO">
+	<resultMap id="BaseResultMap" type="com.hn658.${projectName}.common.entity.FunctionEO">
+		<id property="id" column="id" />
+		<result property="parentId" column="parent_id" />
+		<result property="functionName" column="function_name" />
+		<result property="uri" column="uri" />
+		<result property="functionLevel" column="function_level" jdbcType="INTEGER"/>
+		<result property="validFlag" column="valid_flag" jdbcType="BOOLEAN" />
+		<result property="displayOrder" column="display_order" jdbcType="INTEGER"/>
+		<result property="leaf" column="leaf" jdbcType="BOOLEAN" />
+		<result property="functionType" column="function_type" jdbcType="INTEGER"/>
+		<result property="functionDesc" column="function_desc" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP" />
+		<result property="isDeleted" column="is_deleted" jdbcType="BOOLEAN" />
+	</resultMap>
+
+	<insert id="insert" parameterType="com.hn658.${projectName}.common.entity.FunctionEO"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_${projectName}_function
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="functionName != null">
+				function_name,
+			</if>
+			<if test="uri != null">
+				uri,
+			</if>
+			<if test="functionLevel != null">
+				function_level,
+			</if>
+			<if test="validFlag != null">
+				valid_flag,
+			</if>
+			<if test="displayOrder != null">
+				display_order,
+			</if>
+			<if test="leaf != null">
+				leaf,
+			</if>
+			<if test="functionType != null">
+				function_type,
+			</if>
+			<if test="functionDesc != null">
+				function_desc,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="parentId != null">
+				#{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="functionName != null">
+				#{functionName,jdbcType=VARCHAR},
+			</if>
+			<if test="uri != null">
+				#{uri,jdbcType=VARCHAR},
+			</if>
+			<if test="functionLevel != null">
+				#{functionLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="validFlag != null">
+				#{validFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="displayOrder != null">
+				#{displayOrder,jdbcType=VARCHAR},
+			</if>
+			<if test="leaf != null">
+				#{leaf,jdbcType=BOOLEAN},
+			</if>
+			<if test="functionType != null">
+				#{functionType,jdbcType=VARCHAR},
+			</if>
+			<if test="functionDesc != null">
+				#{functionDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted,jdbcType=BOOLEAN},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate" parameterType="com.hn658.${projectName}.common.entity.FunctionEO">
+		<foreach collection="list" item="item" index="index" separator=";">
+			update t_${projectName}_function
+			<set>
+				<if test="item.functionName != null">
+					function_name = #{item.functionName},
+				</if>
+				<if test="item.uri != null">
+					uri = #{item.uri},
+				</if>
+				<if test="item.functionLevel != null">
+					function_level = #{item.functionLevel},
+				</if>
+				<if test="item.displayOrder != null">
+					display_order = #{item.displayOrder},
+				</if>
+				<if test="item.validFlag != null">
+					valid_flag = #{item.validFlag},
+				</if>
+				<if test="item.leaf != null">
+					leaf = #{item.leaf},
+				</if>
+				<if test="item.functionDesc != null">
+					function_desc = #{item.functionDesc},
+				</if>
+				<if test="item.parentId != null">
+					parent_id = #{item.parentId},
+				</if>
+				<if test="item.lastUpdateTime != null and item.lastUpdateTime != ''">
+					last_update_time= #{item.lastUpdateTime},
+				</if>
+				<if test="item.isDeleted != null ">
+					is_deleted= #{item.isDeleted}
+				</if>
+			</set>
+			<where>
+				id = #{item.id}
+			</where>
+		</foreach>
+	</update>
+	
+	<!-- 通过主键批量删除记录 -->
+	<delete id="batchDeleteByIds" parameterType="java.util.List">
+		delete from t_${projectName}_function where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap">
+		<![CDATA[
+			select
+		]]>
+		<include refid="base_column_list" />
+		<![CDATA[
+			from t_${projectName}_function
+			where id = #{id}
+		]]>
+	</select>
+
+	<!-- 通过当前功能对象的ID得到父功能对象 -->
+	<select id="getParentById" parameterType="string" resultMap="BaseResultMap">
+		<![CDATA[
+			select
+		]]>
+		<include refid="select_param" />
+		<![CDATA[
+			from t_${projectName}_function function
+			left join t_${projectName}_function child_function on function.id = child_function.parent_id
+			where child_function.id = #{id}
+		]]>
+	</select>
+
+	<!-- 通过ID ,获取该节点的所有子节点 -->
+	<select id="getAllChildFunctionById" resultMap="BaseResultMap"
+		resultType="long">
+		<![CDATA[
+			select
+		]]>
+		<include refid="select_param" />
+		<![CDATA[
+			from t_${projectName}_function function
+			left join t_${projectName}_function parent_function
+			on function.parent_id = parent_function.id
+			connect by prior function.id = function.parent_id
+			start with function.id=#{id}
+		]]>
+	</select>
+
+	<!-- 通过URI递归获取该节点的所有功能 -->
+	<select id="getAllChildFunctionByURI" resultMap="BaseResultMap"
+		resultType="string">			
+		<![CDATA[
+			select
+		]]>
+		<include refid="select_param" />
+		<![CDATA[
+			from t_${projectName}_function function
+			left join t_${projectName}_function parent_function
+			on function.parent_id = parent_function.id
+			connect by prior function.id = function.parent_id
+			start with function.uri=#{uri}
+		]]>
+	</select>
+
+	<!-- 通过角色ID查询功能对象ID集合的查詢字段 -->
+	<sql id="select_param">
+		function.id as id,
+		function.parent_id as parent_id,
+		function.function_name as function_name,
+		function.uri as uri,
+		function.function_level as function_level,
+		function.valid_flag as valid_flag,
+		function.display_order as display_order,
+		function.leaf as leaf,
+		function.function_type as function_type,
+		function.function_desc as function_desc,
+		function.create_time as create_time,
+		function.last_update_time as last_update_time,
+		function.is_deleted as is_deleted
+	</sql>
+
+	<!-- 通过角色ID查询功能对象ID集合 -->
+	<select id="selectAllByRoleId" resultMap="BaseResultMap" parameterType="long">
+		<![CDATA[
+			select 
+		]]>
+		<include refid="select_param" />
+		<![CDATA[
+			from t_${projectName}_function function, t_${projectName}_functionrole functionrole
+			where function.id = functionrole.function_id 
+				and functionrole.role_id = #{roleId} 
+			order by function.display_order
+		]]>
+	</select>
+
+	<sql id="selectSql">
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="parentId != null">
+				and parent_id = #\{parentId\}
+			</if>
+			<if test="functionName != null">
+				and function_name = #{functionName}
+			</if>
+			<if test="functionNameLike != null">
+				and function_name like '%'||#{functionNameLike}||'%'
+			</if>
+			<if test="uri != null">
+				and uri = #{uri}
+			</if>
+			<if test="uriLike != null">
+				and uri like '%'||#{uriLike}||'%'
+			</if>
+			<if test="functionIds != null">
+				and id in
+				<foreach collection="functionIds" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="functionTypes != null">
+				and function_type in
+				<foreach collection="functionTypes" item="item" index="index" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="functionUris != null">
+				and uri in
+				<foreach collection="functionUris" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="isDeleted != null">
+				and is_deleted = #{isDeleted}
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectByMap" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="base_column_list" />
+		from t_${projectName}_function
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			order by ${ORDERBY}
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			limit #{limit}
+		</if>
+		<if test="start != null">
+			offset #{start}
+		</if>
+	</select>
+
+	<!-- 查询总记录条数 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		select count(*) from t_${projectName}_function
+		<include refid="selectSql" />
+	</select>
+	
+	<sql id="base_column_list">
+		id,
+		parent_id,
+		function_name,
+		uri,
+		function_level,
+		valid_flag,
+		display_order,
+		leaf,
+		function_type,
+		function_desc,
+		create_time,
+		last_update_time,
+		is_deleted
+	</sql>
+
+	<sql id="select_unique_sql">
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="uri != null and uri != ''">
+				uri = #{uri}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 查询符合条件的唯一记录 -->
+	<select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="base_column_list" />
+		from t_${projectName}_function
+		<include refid="select_unique_sql"/>
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap">
+		 ${value}
+	</select>
+	
+	<select id="selectRootFunction" parameterType="String" resultMap="BaseResultMap">
+		select
+		<include refid="base_column_list" />
+		from t_${projectName}_function
+		where parent_id is null
+	</select>
+	
+	<!-- 根据用户id查询数据权限列表 -->
+	<select id="selectUserFunction" resultMap="BaseResultMap" parameterType="long">
+		<![CDATA[
+			select 
+		]]>
+		<include refid="select_param" />
+		<![CDATA[
+			from t_${projectName}_function function
+			join t_${projectName}_functionrole functionrole 
+			on function.id = functionrole.function_id 
+			join t_${projectName}_userrole userrole
+			on functionrole.role_id = userrole.role_id
+			where userrole.user_id = #{userId}
+			and function.is_deleted =false
+		]]>
+	</select>
+	
+	<!-- 通过权限id获取用户id -->
+	<select id="selectUserIdByFunctionId" parameterType="long" resultType="long">
+		select userrole.user_id as user_id
+		from t_${projectName}_functionrole functionrole 
+		join t_${projectName}_userrole userrole
+		on userrole.role_id=functionrole.role_id
+		where functionrole.function_id=#{functionId}
+	</select>
+</mapper>

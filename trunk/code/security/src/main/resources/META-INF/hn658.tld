@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2eeweb-jsptaglibrary_2_0.xsd" version="2.0"> 
+	<description>hn658 extend jsp tag for web framework</description>
+	<tlib-version>2.2</tlib-version>
+	<short-name>hn658</short-name>
+	<jsp-version>2.0</jsp-version>
+	<uri>/hn658</uri>
+	<tag>
+		<name>permission</name>
+		<tag-class>com.hn658.framework.security.tag.PermissionForJsTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+</taglib>

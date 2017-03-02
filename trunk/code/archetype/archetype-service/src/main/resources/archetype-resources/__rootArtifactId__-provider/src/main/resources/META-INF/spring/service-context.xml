@@ -1,0 +1,17 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+	">
+	
+	<dubbo:application name="${artifactId}" owner="5173" compiler="javassist" environment="develop"  />
+	<dubbo:registry protocol="zookeeper" address="www.wzitech.com" port="2181"></dubbo:registry>
+	
+	<context:property-placeholder ignore-resource-not-found="true"
+			location="classpath:META-INF/config/application.properties" />
+	
+</beans>

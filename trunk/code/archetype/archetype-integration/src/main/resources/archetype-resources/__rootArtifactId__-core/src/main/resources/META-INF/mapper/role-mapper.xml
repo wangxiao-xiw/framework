@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hn658.${projectName}.common.entity.RoleInfoEO">
+	<!-- 角色与功能配置结果映射配置 -->
+	<resultMap id="detailRoleMap"
+		type="com.hn658.${projectName}.common.entity.RoleInfoEO">
+		<id property="id" column="id" />
+		<result property="roleName" column="role_name" />
+		<result property="roleDesc" column="role_desc" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP" />
+		<result property="isDeleted" column="is_deleted" jdbcType="BOOLEAN" />
+		<collection property="functionIds" column="function_id" ofType="string">
+			<result column="function_id"/>
+		</collection>
+		<collection property="functionUris" column="function_uri" ofType="string">
+			<result column="function_uri"/>
+		</collection>
+	</resultMap>
+
+	<!-- 角色功能ID结果信息 -->
+	<sql id="detail_param">
+		role.id as id,
+		role.role_name as role_name,
+		role.role_desc as role_desc,
+		role.create_time as create_time,
+		role.last_update_time as last_update_time,
+		role.is_deleted as is_deleted,
+		function.id as function_id,
+		function.uri as function_uri
+	</sql>
+	
+	<!-- 缓存加载所有角色与功能ID -->
+	<select id="getAllRole" resultMap="detailRoleMap">
+		<![CDATA[
+			select 
+		]]>
+		<include refid="detail_param" />
+		<![CDATA[
+  			from t_${projectName}_role role
+ 			inner join t_auth_functionrole funrole
+ 			on role.id = funrole.role_id
+ 			inner join t_${projectName}_function function
+ 			on funct.id = funrole.function_id
+		]]>
+	</select>
+	
+	<sql id="select_param">
+		role.id as id,
+		role.role_name as role_name,
+		role.role_desc as role_desc,
+		role.create_time as create_time,
+		role.last_update_time as last_update_time,
+		role.is_deleted as is_deleted
+	</sql>
+
+	<!-- 得到可授权的角色对象集合 -->
+	<select id="getAllChooesRoleByUserId" resultMap="BaseResultMap" parameterType="map">
+		<![CDATA[
+			select 
+		]]>
+		<include refid="select_param" />
+		<if test="currentUserId!=null and userId!=''">
+			<![CDATA[
+				from t_${projectName}_role role
+				right join t_${projectName}_userrole userrole on role.id = userrole.role_id
+	 			where userrole.userid = #{currentUserId}
+	 			and role.id not in (
+		 			select role_id
+		 			from t_${projectName}_userrole 
+		 			where userid=#{userId}
+	 			)
+			]]>
+		</if>
+		<if test="currentUserId==null and userId!=''">
+			<![CDATA[
+				from t_${projectName}_role role where id not in(  
+				select role_id from t_${projectName}_userrole where userid=#{userId})
+			]]>
+		</if>
+	</select>
+	
+	<!-- 得到已授权的角色对象集合 -->
+	<select id="getAllAuthorizedRoleByUserId" resultMap="BaseResultMap"
+		parameterType="string">
+		<![CDATA[
+			select 
+		]]>
+		<include refid="select_param" />
+		<if test="currentUserId!=null and userId!=''">
+			<![CDATA[
+				from t_${projectName}_role role
+				right join t_${projectName}_userrole userrole on role.id = userrole.role_id
+	 			where userrole.userid = #{currentUserId}
+	 			and role.id in (
+		 			select role_id
+		 			from t_${projectName}_userrole 
+		 			where userid=#{userId}
+	 			)
+			]]>
+		</if>
+		<if test="currentUserId==null and userId!=''">
+			<![CDATA[
+				from t_${projectName}_role role where id in(  
+				select role_id from t_${projectName}_userrole where userid=#{userId})
+			]]>
+		</if>
+	</select>
+	
+	<!-- 角色单表查询结果映射配置 -->
+	<resultMap id="BaseResultMap"
+		type="com.hn658.${projectName}.common.entity.RoleInfoEO">
+		<id property="id" column="id" />
+		<result property="roleName" column="role_name" />
+		<result property="roleDesc" column="role_desc" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP" />
+		<result property="isDeleted" column="is_deleted" jdbcType="BOOLEAN" />
+	</resultMap>
+	
+	<sql id="base_column_list">
+		id,
+		role_name,
+		role_desc,
+		create_time,
+		last_update_time,
+		is_deleted
+	</sql>
+	
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap">
+		<![CDATA[
+			select
+		]]>
+		<include refid="base_column_list" />
+		<![CDATA[
+			from t_${projectName}_role
+			where id = #{id}
+		]]>
+	</select>
+
+	<sql id="selectSql">
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="roleName != null">
+				and role_name = #{roleName}
+			</if>
+			<if test="roleNameLike != null">
+				and role_name like '%'||#{roleNameLike}||'%'
+			</if>
+			<if test="roleIds != null">
+				and id in
+				<foreach collection="roleIds" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="isDeleted != null">
+				and is_deleted = #{isDeleted}
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectByMap" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="base_column_list" />
+		from t_${projectName}_role
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			order by ${ORDERBY}
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			limit #{limit}
+		</if>
+		<if test="start != null">
+			offset #{start}
+		</if>
+	</select>
+
+	<!-- 查询总记录条数 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		select count(*) from t_${projectName}_role
+		<include refid="selectSql" />
+	</select>
+	
+	<!-- 通过角色id获取用户id -->
+	<select id="selectUserIdByRoleId" parameterType="long" resultType="long">
+		select user_id
+		from t_${projectName}_userrole
+		where role_id=#{roleId}
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			insert into t_${projectName}_role
+		]]>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleName != null">
+				role_name,
+			</if>
+			<if test="roleDesc != null">
+				role_desc,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleName != null">
+				#{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="roleDesc != null">
+				#{roleDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted,jdbcType=BOOLEAN},
+			</if>
+		</trim>
+	</insert>
+	
+		
+	<!-- 通过主键批量删除记录 -->
+	<delete id="batchDeleteByIds" parameterType="java.util.List">
+		delete from t_${projectName}_role where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate">
+		<foreach collection="list" item="item" index="index" separator=";">
+			update t_${projectName}_role
+			<set>
+				<if test="item.roleName != null and item.roleName != ''">
+					role_name = #{item.roleName},
+				</if>
+				<if test="item.roleDesc != null and item.roleDesc != ''">
+					role_desc = #{item.roleDesc},
+				</if>
+				<if test="item.lastUpdateTime != null">
+					last_update_time= #{item.lastUpdateTime},
+				</if>
+				<if test="item.isDeleted != null">
+					is_deleted= #{item.isDeleted}
+				</if>
+			</set>
+			<where>
+				id = #{item.id}
+			</where>
+		</foreach>
+	</update>
+	
+	<!-- 得到非当前用户分配的角色ID集合 -->
+	<select id="getRoleIdsNoCurrentUserAuthRole" resultType="long"  parameterType="map">
+		<![CDATA[
+			select role.role_id
+    		from t_${projectName}_userrole role
+   			where role.userid = #{currentUserId}
+     		and role.role_id not in (
+     			select role_id
+                from t_${projectName}_userrole
+                where userid = #{uid})
+		]]>
+	</select>
+	
+	<!-- 得到待分配的角色对象集合 -->
+	<select id="selectUnAuthedRoles" resultMap="BaseResultMap"  parameterType="map">
+		<![CDATA[
+			select
+		]]>
+		<include refid="select_param" />
+		<![CDATA[
+			from t_${projectName}_role role
+ 			where role.id not in (
+ 			select role_id 
+ 			from t_${projectName}_userrole
+ 			where user_id=#{uid}) and role.is_deleted=#{isDeleted}
+		]]>
+	</select>
+	
+	<!-- 得到已分配的角色对象集合 -->
+	<select id="selectAuthedRoles" resultMap="BaseResultMap"
+		parameterType="map">
+		<![CDATA[
+			select 
+		]]>
+		<include refid="select_param" />
+		<![CDATA[
+			from t_${projectName}_role role
+			right join t_${projectName}_userrole userrole on role.id = userrole.role_id
+ 			where userrole.user_id = #{uid} and role.is_deleted=#{isDeleted}
+		]]>
+	</select>
+	
+	<!-- 根据角色ID删除指定角色的权限 -->
+	<delete id="deleteFunctionRoleById"  parameterType="map">
+		<![CDATA[
+			delete from t_${projectName}_functionrole where role_id = #{roleId}
+		]]>
+	</delete>
+	
+	<!-- 保存角色权限到角色权限表 -->
+	<insert id="insertRoleFunction" parameterType="map" useGeneratedKeys="true" keyProperty="id">	
+		insert into t_${projectName}_functionrole (role_id,function_id) 
+		values (#{roleId}, #{functionId})
+	</insert>
+	
+	<select id="existRoleUserByRoleId" parameterType="long" resultType="Long">
+		<![CDATA[
+			select count(1) from t_${projectName}_userrole where 
+			role_id = #{roleId} 
+		]]>
+	</select>
+	
+	<!-- 删除用户已授权的角色记录 -->
+	<delete id="deleteByUid" parameterType="long">
+		delete from t_${projectName}_userrole where user_id = #{uid}
+	</delete>
+	
+	<!-- 插入用户已授权的角色记录 -->
+	<insert id="insertUserRole" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		insert into t_${projectName}_userrole
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">
+				role_id,
+			</if>
+			<if test="uid != null">
+				user_id
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">
+				#{roleId},
+			</if>
+			<if test="uid != null">
+				#{uid}
+			</if>
+		</trim>
+	</insert>
+</mapper>

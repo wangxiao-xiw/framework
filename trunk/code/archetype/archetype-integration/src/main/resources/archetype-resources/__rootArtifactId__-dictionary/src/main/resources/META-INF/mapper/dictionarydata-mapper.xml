@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hn658.${projectName}.dictionary.entity.DictionaryDataEntity" >
+
+	<resultMap id="dictionaryDataResultMap"
+		type="com.hn658.${projectName}.dictionary.entity.DictionaryDataEntity">
+        <result column="id" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="dict_type" property="dictType" jdbcType="VARCHAR" />
+		<result column="value_order" property="valueOrder" jdbcType="VARCHAR" />
+		<result column="value_name" property="valueName" jdbcType="VARCHAR"  />
+		<result column="value_code" property="valueCode" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="note_info" property="noteInfo" jdbcType="VARCHAR" />
+		<result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="ref_code" property="refCode" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	
+	<resultMap id="dictionaryEntityResultMap"
+		type="com.hn658.${projectName}.dictionary.dto.DictionaryDTO">
+		<result column="note_info" property="display" jdbcType="VARCHAR" />
+		<result column="value_name" property="value" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<!-- 新增记录 -->
+	<insert id="insert" parameterType="com.hn658.${projectName}.dictionary.entity.DictionaryDataEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_base_dictionary_data
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dictType != null and dictType != ''">dict_type,</if>
+			<if test="valueOrder != null and valueOrder !=''">value_order,</if>
+			<if test="valueName != null and valueName !=''">value_name,</if>
+			<if test="valueCode != null and valueCode !=''">value_code,</if>
+			<if test="language != null and language !=''" >language,</if>
+			<if test="noteInfo != null and noteInfo !=''">note_info,</if>
+			<if test="refCode != null and refCode !=''">ref_code,</if>
+			<if test="isDeleted != null">is_deleted,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="modifyTime != null">modify_time</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dictType != null and dictType != ''">#{dictType},</if>
+			<if test="valueOrder != null and valueOrder !=''">#{valueOrder},</if>
+			<if test="valueName != null and valueName !=''">#{valueName},</if>
+			<if test="valueCode != null and valueCode !=''">#{valueCode},</if>
+			<if test="language != null and language !=''" >#{language},</if>
+			<if test="noteInfo != null and noteInfo !=''">#{noteInfo},</if>
+			<if test="refCode != null and refCode !=''">#{refCode},</if>
+			<if test="isDeleted != null">#{isDeleted},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="modifyTime != null">#{modifyTime}</if>
+		</trim>
+	</insert>
+	
+	<!-- 更新记录 -->
+	<update id="updateById" parameterType="com.hn658.${projectName}.dictionary.entity.DictionaryDataEntity">
+		 <![CDATA[
+		 UPDATE t_base_dictionary_data
+		]]>
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="dictType != null and dictType != ''">dict_type=#{dictType},</if>
+			<if test="valueOrder != null and valueOrder !=''">value_order=#{valueOrder},</if>
+			<if test="valueName != null and valueName !=''">value_name=#{valueName},</if>
+			<if test="valueCode != null and valueCode !=''">value_code=#{valueCode},</if>
+			<if test="language != null and language !=''" >language=#{language},</if>
+			<if test="noteInfo != null and noteInfo !=''">note_info=#{noteInfo},</if>
+			<if test="refCode != null and refCode !=''">ref_code=#{refCode},</if>
+			<if test="isDeleted != null">is_deleted=#{isDeleted},</if>
+			<if test="createTime != null">create_time=#{createTime},</if>
+			<if test="modifyTime != null">modify_time=#{modifyTime}</if> 
+		</trim>
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="id !=null">
+				id = #{id}
+			</if>
+			<if test="dictType != null and dictType != ''">
+				and	dict_type=#{dictType}
+			</if>
+		</trim>
+	</update>
+	
+	<sql id="selectSql">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="id != null">id = #{id}</if>
+			<if test="dictType != null and dictType != ''">and dict_type=#{dictType}</if>
+			<if test="valueOrder != null and valueOrder !=''">and value_order = #{valueOrder}</if>
+			<if test="valueName != null and valueName !=''">and value_name = #{valueName}</if>
+			<if test="valueCode != null and valueCode !=''">and value_code = #{valueCode}</if>
+			<if test="language != null and language !=''" >and language = #{language}</if>
+			<if test="noteInfo != null and noteInfo !=''">and note_info = #{noteInfo}</if>
+			<if test="isDeleted != null">and is_deleted = #{isDeleted}</if>
+		</trim>
+	</sql>
+	
+	<select id="selectById" parameterType="long" resultMap="dictionaryDataResultMap">
+		select *
+		from t_base_dictionary_data where id = #{id}
+	</select>
+	
+	
+	<select id="selectListByType" parameterType="map" resultMap="dictionaryEntityResultMap">
+		 select note_info,value_name from t_base_dictionary_data
+        <include refid="selectSql" />
+         <if test="ORDERBY != null and ORDERBY != ''">
+            order by ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+	</select>
+	
+	
+	<select id="selectByMap" parameterType="map" resultMap="dictionaryDataResultMap">
+        select * from t_base_dictionary_data
+        <include refid="selectSql" />
+        <if test="ORDERBY != null and ORDERBY != ''">
+            order by ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+    </select>
+	
+	<!-- 查询符合条件的记录数 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		select count(1) from t_base_dictionary_data
+		<include refid="selectSql" />
+	</select>
+
+    <select id="selectUniqueByProp" parameterType="map" resultMap="dictionaryDataResultMap">
+        select * from t_base_dictionary_data
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectOneByStatement" parameterType="map" resultMap="dictionaryDataResultMap">
+        select * from t_base_dictionary_data
+        <include refid="selectSql"/>
+    </select>
+
+
+    <select id="selectDataByType" parameterType="map" resultMap="dictionaryDataResultMap">
+        with recursive tree_temp as
+		(
+			select id,parent_code,type_alias,is_leaf from t_hn658_dictionary_type where type_alias= #{dicttype}
+			union all
+			select d.id,d.parent_code,d.type_alias,d.is_leaf
+			from
+			tree_temp t,
+			t_hn658_dictionary_type d
+			where d.parent_code= t.id
+		)
+		select * from t_base_dictionary_data where dict_type in ( select type_alias from tree_temp where is_leaf = true )
+		and is_deleted = #{isDeleted};
+    </select>
+</mapper>

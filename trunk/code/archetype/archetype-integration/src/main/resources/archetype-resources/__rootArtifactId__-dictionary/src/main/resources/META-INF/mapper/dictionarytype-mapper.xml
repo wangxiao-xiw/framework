@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hn658.${projectName}.dictionary.entity.DictionaryTypeEntity" >
+	
+
+	<resultMap id="dictionaryTypeResultMap"
+		type="com.hn658.${projectName}.dictionary.entity.DictionaryTypeEntity">
+        <result column="id" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+		<result column="type_alias" property="typeAlias" jdbcType="VARCHAR" />
+		<result column="ref_code" property="refCode" jdbcType="VARCHAR" />
+		<result column="create_time" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyDate" jdbcType="TIMESTAMP" />
+        <result column="is_leaf" property="isLeaf" jdbcType="BOOLEAN" />
+        <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN" />
+        <result column="parent_code" property="parentCode" jdbcType="NUMERIC"  javaType="long" />
+        <result column="version_no" property="versionNo" jdbcType="NUMERIC"  javaType="long" />
+    </resultMap>
+	
+	<!-- 查询数据字典分类下的子分类 -->
+	<select id="getLowerDictionaryTypes" 
+		parameterType="map" resultMap="dictionaryTypeResultMap">
+		select *
+		<![CDATA[
+			from t_base_dictionary_type
+			where parent_code = #{parentCode, jdbcType=NUMERIC}
+				and is_deleted = #{isDeleted, jdbcType=BOOLEAN}
+		]]>
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="selectByMap" parameterType="map" resultMap="dictionaryTypeResultMap">
+        select * from  t_base_dictionary_type
+        <include refid="selectSql" />
+        <if test="ORDERBY != null and ORDERBY != ''">
+            order by ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+    </select>
+	
+	<!-- 查询符合条件的记录数 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		select count(1) from t_base_dictionary_type
+		<include refid="selectSql" />
+	</select>
+    
+    <!-- 查询数据字典所有子节点分类 -->
+    <select id="getIsLeafTypes"
+            parameterType="map" resultMap="dictionaryTypeResultMap">
+        select *
+        <![CDATA[
+			from t_base_dictionary_type
+			where is_leaf = #{isLeaf, jdbcType=BOOLEAN}
+				and is_deleted = #{isDeleted, jdbcType=BOOLEAN}
+		]]>
+    </select>
+    
+	<!-- 通过id查-->
+	<select id="selectById" parameterType="long" resultMap="dictionaryTypeResultMap">
+		select *
+		from t_base_dictionary_type where id = #{id}
+	</select>
+	
+
+    <!-- 通过分类别名计数 -->
+    <select id="countDictType" parameterType="com.hn658.${projectName}.dictionary.entity.DictionaryTypeEntity" resultType="int">
+        select count(id)
+        from t_base_dictionary_type
+        where type_alias = #{typeAlias}
+        and is_deleted = #{isDeleted, jdbcType=BIT}
+    </select>
+
+    <!-- 修改数据字典分类的IS_LEAF字段 -->
+    <update id="updateIsLeafOfDictionaryType"
+            parameterType="com.hn658.${projectName}.dictionary.entity.DictionaryTypeEntity">
+        <![CDATA[
+			update t_base_dictionary_type
+		]]>
+        <set>
+            <if test="isLeaf != null">
+                is_leaf = #{isLeaf, jdbcType=BOOLEAN},
+            </if>
+            <if test="modifyDate != null">
+                modify_time = #{modifyDate, jdbcType=DATE},
+            </if>
+        </set>
+        where id = #{id, jdbcType=NUMERIC}
+    </update>
+
+
+    <insert id="insert"
+            parameterType="com.hn658.${projectName}.dictionary.entity.DictionaryTypeEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_base_dictionary_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''">
+                type_name,
+            </if>
+            <if test="typeAlias != null and typeAlias != ''">
+                type_alias,
+            </if>
+            <if test="parentCode != null ">
+                parent_code,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+            <if test="modifyDate != null">
+                modify_time,
+            </if>
+            <if test="isLeaf != null">
+                is_leaf,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="versionNo != null">
+                version_no,
+            </if>
+            <if test="refCode != null and refCode != ''">
+                ref_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''">
+                #{typeName},
+            </if>
+            <if test="typeAlias != null and typeAlias != ''">
+                #{typeAlias},
+            </if>
+            <if test="parentCode != null ">
+                #{parentCode},
+            </if>
+            <if test="createDate != null ">
+                #{createDate},
+            </if>
+            <if test="modifyDate != null ">
+                #{modifyDate},
+            </if>
+            <if test="isLeaf != null ">
+                #{isLeaf},
+            </if>
+            <if test="isDeleted != null ">
+                #{isDeleted},
+            </if>
+            <if test="versionNo != null ">
+                #{versionNo},
+            </if>
+            <if test="refCode != null and refCode != ''">
+                #{refCode},
+            </if>
+        </trim>
+    </insert>
+
+
+    <!-- 修改数据字典分类 -->
+    <update id="updateDictionaryType"
+            parameterType="com.hn658.${projectName}.dictionary.entity.DictionaryTypeEntity">
+        <![CDATA[
+			update t_base_dictionary_type
+		]]>
+        <set>
+            <if test="typeName != null">
+                type_name = #{typeName, jdbcType=VARCHAR},
+            </if>
+            <if test="typeAlias != null">
+                type_alias = #{typeAlias, jdbcType=VARCHAR},
+            </if>
+            <if test="isLeaf != null">
+                is_leaf = #{isLeaf, jdbcType=CHAR},
+            </if>
+            <if test="modifyDate != null">
+                modify_time = #{modifyDate, jdbcType=DATE},
+            </if>
+            <if test="versionNo != null">
+                version_no = #{versionNo, jdbcType=NUMERIC},
+            </if>
+            <if test="refCode != null">
+                ref_code = #{refCode, jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id, jdbcType=NUMERIC}
+    </update>
+
+
+    <!-- 废除数据字典分类（通过ID修改isDeleted字段） -->
+    <update id="deleteDictionaryTypeById" parameterType="map">
+        <![CDATA[
+			update t_base_dictionary_type
+			set is_deleted = #{isDeleted, jdbcType=BOOLEAN},
+				modify_time = #{modifyDate, jdbcType=DATE}
+			where id = #{id, jdbcType=NUMERIC}
+		]]>
+    </update>
+
+    <select id="selectUniqueByProp" parameterType="map" resultMap="dictionaryTypeResultMap">
+        select * from t_base_dictionary_type
+        <include refid="selectSql"/>
+    </select>
+
+    <!-- 获取数据字典的最大版本号 -->
+    <select id="getLastVersionNo" parameterType="map" resultType="Long">
+        select max(version_no) from t_base_dictionary_type
+    </select>
+
+
+    <sql id="selectSql">
+        <trim prefix="WHERE" prefixOverrides="and|OR">
+            <if test="id != null">id= #{id}</if>
+            <if test="typeAlias != null and typeAlias != ''">and type_alias = #{typeAlias} </if>
+            <if test="isDeleted !=null ">and is_deleted = #{isDeleted}</if>
+            <if test="parentCode !=null ">and parent_code = #{parentCode}</if>
+            <if test="isLeaf !=null ">and is_leaf = #{isLeaf}</if>
+        </trim>
+    </sql>
+
+    <select id="selectLeafNodeByType" parameterType="map" resultType="String">
+        with recursive tree_temp as
+        (
+        SELECT id,parent_code,type_alias,is_leaf,is_deleted  FROM t_base_dictionary_type WHERE type_alias= #{dictType}
+        UNION ALL
+        SELECT d.id,d.parent_code,d.type_alias,d.is_leaf,d.is_deleted
+        FROM
+        TREE_TEMP t,
+        t_base_dictionary_type d
+        WHERE d.parent_code= t.id
+        )
+        SELECT type_alias FROM TREE_TEMP WHERE is_leaf = true and is_deleted = #{isDeleted};
+
+
+    </select>
+
+</mapper>

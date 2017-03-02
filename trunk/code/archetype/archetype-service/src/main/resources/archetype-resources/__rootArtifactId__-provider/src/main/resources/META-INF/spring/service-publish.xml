@@ -1,0 +1,13 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	">
+	<!-- 
+	-->
+	<bean id="serviceImpl" class="com.hn658.${projectName}.${moduleName}.itf.impl.DemoServiceImpl" />
+	<dubbo:service interface="com.hn658.${projectName}.${moduleName}.itf.DemoService" ref="serviceImpl" />
+</beans>

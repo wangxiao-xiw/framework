@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>${groupId}</groupId>
+		<artifactId>${rootArtifactId}</artifactId>
+		<version>${version}</version>
+		<relativePath>../pom.xml</relativePath> 
+	</parent>
+	<artifactId>${projectName}-filemgmt</artifactId>
+	<packaging>jar</packaging>
+	<name>${project.artifactId}-v${project.version}</name>
+	<dependencies>
+		<!-- 658 framework start -->
+		<dependency>
+			<groupId>com.658.framework</groupId>
+			<artifactId>shared</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.658.framework</groupId>
+			<artifactId>security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.658.framework</groupId>
+			<artifactId>common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.658.framework</groupId>
+			<artifactId>cache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.658.framework</groupId>
+			<artifactId>dataaccess</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.658.framework</groupId>
+			<artifactId>exception</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.658.framework</groupId>
+			<artifactId>logging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.658.framework</groupId>
+			<artifactId>file</artifactId>
+		</dependency>
+		<!-- 658 framework end -->
+		<!-- redis end -->
+		<!-- spring framework begin -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- spring framework end -->
+		<!-- base user dependency -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>${projectName}-common</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>${projectName}-config</artifactId>
+			<version>${version}</version>
+		</dependency>
+	</dependencies>
+</project>

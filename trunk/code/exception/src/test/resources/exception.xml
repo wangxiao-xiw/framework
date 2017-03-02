@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<exceptionHandler>
+	<handlers>
+		<handler id="generalLoggingHandler" class="com.hn658.framework.exception.handler.GeneralLoggingHandler" />
+	</handlers>
+	<exceptions>
+		<exception class="java.lang.NullPointerException" postHandlingAction="ThrowNewException">
+			<refHandler ref="generalLoggingHandler" />
+		</exception>
+		<exception class="com.hn658.framework.shared.exception.SystemException" postHandlingAction="NotifyRethrow">
+			<refHandler ref="generalLoggingHandler" />
+		</exception>
+		<exception class="com.hn658.framework.shared.exception.BusinessException" postHandlingAction="None">
+			<refHandler ref="generalLoggingHandler" />
+		</exception>
+	</exceptions>
+</exceptionHandler>
