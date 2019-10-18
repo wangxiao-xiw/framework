@@ -101,7 +101,7 @@
 		<jstl.version>1.2</jstl.version>
 		<jsp.version>2.0</jsp.version>
 		<shiro.version>1.2.0</shiro.version>
-		<activemq.version>5.10.0</activemq.version>
+		<activemq.version>5.15.10</activemq.version>
 		<sitemesh.version>2.4.2</sitemesh.version>
 		<velocity.version>1.4</velocity.version>
 		<velocity.tools.version>1.4</velocity.tools.version>
