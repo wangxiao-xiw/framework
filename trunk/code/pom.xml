@@ -106,7 +106,7 @@
 		<velocity.version>1.4</velocity.version>
 		<velocity.tools.version>1.4</velocity.tools.version>
 		<perf4j.version>0.9.16</perf4j.version>
-		<quartz.version>1.8.6</quartz.version>
+		<quartz.version>2.3.2</quartz.version>
 		<spymemcached.version>2.8.0</spymemcached.version>
 		<jmemcached.core.version>1.0.0</jmemcached.core.version>
 		<ehcache.core.version>2.5.1</ehcache.core.version>
