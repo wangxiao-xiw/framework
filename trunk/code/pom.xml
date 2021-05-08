@@ -100,7 +100,7 @@
 		<servlet.api.version>2.5</servlet.api.version>
 		<jstl.version>1.2</jstl.version>
 		<jsp.version>2.0</jsp.version>
-		<shiro.version>1.2.0</shiro.version>
+		<shiro.version>1.6.0</shiro.version>
 		<activemq.version>5.10.0</activemq.version>
 		<sitemesh.version>2.4.2</sitemesh.version>
 		<velocity.version>1.4</velocity.version>
