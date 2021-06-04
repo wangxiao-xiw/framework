@@ -118,7 +118,7 @@
 		<joda.time.version>2.1</joda.time.version>
 		<dozer.version>5.3.2</dozer.version>
 		<poi.version>3.7</poi.version>
-		<httpclient.version>4.2.1</httpclient.version>
+		<httpclient.version>4.5.13</httpclient.version>
 		<jmagick.version>6.2.4</jmagick.version>
 		<activation.version>1.1</activation.version>
 		<mail.version>1.4</mail.version>
