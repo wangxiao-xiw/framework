@@ -117,7 +117,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>3.6.8.Final</version><!--$NO-MVN-MAN-VER$ -->
+			<version>5.4.24.Final</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>compile</scope>
 		</dependency>
 		<!-- hibernate end -->
