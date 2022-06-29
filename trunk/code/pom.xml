@@ -126,7 +126,7 @@
 		<jms-api.version>1.1-rev-1</jms-api.version>
 		<disconf-client.version>2.6.30</disconf-client.version>
 		<reflections.version>0.9.9-RC1</reflections.version>
-		<zookeeper.version>3.3.6</zookeeper.version>
+		<zookeeper.version>3.4.14</zookeeper.version>
 		<org.osgi.core.version>4.2.0</org.osgi.core.version>
 		<javax.ws.rs-api.version>2.0.1</javax.ws.rs-api.version>
 		<!-- repository setting -->
