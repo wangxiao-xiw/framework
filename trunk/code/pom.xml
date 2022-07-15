@@ -95,7 +95,7 @@
 		<jersey.version>1.12</jersey.version>
 		<xmlbeans.version>2.5.0</xmlbeans.version>
 		<jackson.version>1.9.8</jackson.version>
-		<new.jackson.version>2.0.4</new.jackson.version>
+		<new.jackson.version>2.12.6.1</new.jackson.version>
 		<!-- Other settings -->
 		<servlet.api.version>2.5</servlet.api.version>
 		<jstl.version>1.2</jstl.version>
